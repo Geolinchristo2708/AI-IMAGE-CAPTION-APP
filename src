@@ -1,0 +1,45 @@
+import { useState } from "react";
+import axios from "axios";
+
+export default function ImageUploader() {
+  const [image, setImage] = useState(null);
+  const [caption, setCaption] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleImageChange = (event) => {
+    setImage(event.target.files[0]);
+  };
+
+  const handleUpload = async () => {
+    if (!image) return;
+    setLoading(true);
+
+    const formData = new FormData();
+    formData.append("file", image);
+
+    try {
+      const response = await axios.post("http://127.0.0.1:5000/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setCaption(response.data.caption);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col items-center p-4">
+      <input type="file" onChange={handleImageChange} className="mb-4" />
+      <button
+        onClick={handleUpload}
+        className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+        disabled={loading}
+      >
+        {loading ? "Generating Caption..." : "Upload & Get Caption"}
+      </button>
+      {caption && <p className="mt-4 text-lg font-semibold">{caption}</p>}
+    </div>
+  );
+}
