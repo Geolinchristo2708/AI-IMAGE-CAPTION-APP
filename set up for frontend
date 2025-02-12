@@ -1,0 +1,43 @@
+Create a React App
+
+sh
+Copy
+Edit
+npm create vite@latest image-caption-generator --template react
+cd image-caption-generator
+npm install
+
+Install Required Packages
+
+sh
+Copy
+Edit
+npm install axios tailwindcss @headlessui/react
+
+Initialize Tailwind CSS
+
+sh
+Copy
+Edit
+npx tailwindcss init -p
+Edit tailwind.config.js:
+
+js
+Copy
+Edit
+module.exports = {
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+
+Update index.css
+
+css
+Copy
+Edit
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
