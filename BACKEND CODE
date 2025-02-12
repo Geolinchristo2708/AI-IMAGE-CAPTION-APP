@@ -1,0 +1,38 @@
+from flask import Flask, request, jsonify
+import torch
+from torchvision import transforms
+from PIL import Image
+import os
+
+app = Flask(__name__)
+UPLOAD_FOLDER = "uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+# Load Pretrained Model (Example: Placeholder)
+# Replace with your trained model
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+# Dummy captioning function (Replace with your model's inference)
+def generate_caption(image_path):
+    return "A person wearing stylish clothes."  # Placeholder caption
+
+@app.route("/upload", methods=["POST"])
+def upload_file():
+    if "file" not in request.files:
+        return jsonify({"error": "No file part"}), 400
+
+    file = request.files["file"]
+    if file.filename == "":
+        return jsonify({"error": "No selected file"}), 400
+
+    file_path = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
+    file.save(file_path)
+
+    # Generate caption
+    caption = generate_caption(file_path)
+
+    return jsonify({"caption": caption})
+
+if __name__ == "__main__":
+    app.run(debug=True)
